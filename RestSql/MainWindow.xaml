@@ -1,0 +1,38 @@
+﻿<Window x:Class="RestSql.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RestSql"
+        xmlns:tabs="clr-namespace:RestSql.Tabs"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525" Closing="Window_Closing">
+    <Grid>
+        <Menu x:Name="menu" Height="20" VerticalAlignment="Top">
+            <MenuItem Name="mi_File"
+                      Header="File">
+                <MenuItem Name="mi_Open"
+                          Header="Open" Click="mi_Open_Click"></MenuItem>
+                <MenuItem Name="mi_Save"
+                          Header="Save" Click="mi_Save_Click"></MenuItem>
+                <MenuItem Name="mi_SaveAs"
+                          Header="Save As" Click="mi_SaveAs_Click"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Name="mi_Exit"
+                          Header="Exit" Click="mi_Exit_Click"></MenuItem>
+            </MenuItem>
+        </Menu>
+        <TabControl x:Name="tabControl" Margin="5,30,5,5">
+            <TabItem Header="Databases">
+                <tabs:DatabaseTab></tabs:DatabaseTab>
+            </TabItem>
+            <TabItem Header="Tables">
+                <tabs:EntitiesTab></tabs:EntitiesTab>
+            </TabItem>
+            <TabItem Header="Procedures">
+                <tabs:QueriesTab></tabs:QueriesTab>
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</Window>

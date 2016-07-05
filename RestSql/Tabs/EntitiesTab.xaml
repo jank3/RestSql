@@ -1,0 +1,72 @@
+﻿<UserControl x:Class="RestSql.Tabs.EntitiesTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RestSql.Tabs"
+             mc:Ignorable="d" 
+             LayoutUpdated="UserControl_LayoutUpdated"
+             d:DesignHeight="300" d:DesignWidth="400">
+    <StackPanel Orientation="Horizontal"
+                Background="#FFE5E5E5">
+        <ListBox x:Name="lsb_Tables"
+                             HorizontalAlignment="Left"
+                             Margin="10,10,0,10"
+                             Width="161"
+                             SelectionChanged="lsb_Tables_SelectionChanged"/>
+        <StackPanel Margin="15,5,5,5">
+            <Label x:Name="lbl_Get"
+                   Content="Get"
+                   HorizontalAlignment="Left"
+                   Margin="5,5,5,0"
+                   VerticalAlignment="Top"/>
+            <Border BorderBrush="Black"
+                    BorderThickness="1"
+                    HorizontalAlignment="Left"
+                    Margin="5,2,5,5">
+                <StackPanel>
+                    <CheckBox x:Name="cbx_GetVisible"
+                              Content="Is Visible"
+                              Margin="4"
+                              IsChecked="{Binding GetVisible}">
+                    </CheckBox>
+                    <CheckBox x:Name="cbx_GetAuth"
+                              Content="Requires Authorization"
+                              Margin="4"
+                              IsChecked="{Binding GetAuth}">
+                    </CheckBox>
+                    <Button x:Name="btn_GetAuthGroups"
+                            Content="Authorized Groups"
+                            Margin="4"
+                            HorizontalAlignment="Left"/>
+                </StackPanel>
+            </Border>
+            <Label x:Name="lbl_Save"
+                   Content="Save"
+                   HorizontalAlignment="Left"
+                   Margin="5,5,5,0"
+                   VerticalAlignment="Top"/>
+            <Border BorderBrush="Black"
+                    BorderThickness="1"
+                    HorizontalAlignment="Left"
+                    Margin="5,2,5,5">
+                <StackPanel>
+                    <CheckBox x:Name="cbx_SaveVisible"
+                              Content="Is Visible"
+                              Margin="4"
+                              IsChecked="{Binding SaveVisible}">
+                    </CheckBox>
+                    <CheckBox x:Name="cbx_SaveAuth"
+                              Content="Requires Authorization"
+                              Margin="4"
+                              IsChecked="{Binding SaveAuth}">
+                    </CheckBox>
+                    <Button x:Name="btn_SaveAuthGroups"
+                            Content="Authorized Groups"
+                            Margin="4"
+                            HorizontalAlignment="Left"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </StackPanel>
+</UserControl>
