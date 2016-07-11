@@ -5,13 +5,31 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RestSql.Tabs"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="400">
-    <Grid Background="#FFE5E5E5">
+             d:DesignHeight="300" d:DesignWidth="400"
+             LayoutUpdated="UserControl_LayoutUpdated">
+    <StackPanel Orientation="Horizontal"
+                Background="#FFE5E5E5">
         <ListBox x:Name="lsb_Procedures"
                              HorizontalAlignment="Left"
                              Margin="10,10,0,10"
-                             Width="112"
-                             ItemsSource="{Binding Procedures}"
+                             Width="143"
                              SelectionChanged="lsb_Procedures_SelectionChanged"/>
-    </Grid>
+
+        <StackPanel Margin="20,10,0,0">
+            <CheckBox x:Name="cbx_GetVisible"
+                              Content="Is Visible"
+                              Margin="4"
+                              IsChecked="{Binding Visible}">
+            </CheckBox>
+            <CheckBox x:Name="cbx_GetAuth"
+                              Content="Requires Authorization"
+                              Margin="4"
+                              IsChecked="{Binding Auth}">
+            </CheckBox>
+            <Button x:Name="btn_GetAuthGroups"
+                            Content="Authorized Groups"
+                            Margin="4"
+                            HorizontalAlignment="Left"/>
+        </StackPanel>
+    </StackPanel>
 </UserControl>

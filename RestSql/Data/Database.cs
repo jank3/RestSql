@@ -121,6 +121,15 @@ namespace RestSql.Data
             }
         }
 
+        protected ObservableCollection<Query> m_Queries = new ObservableCollection<Query>();
+        public ObservableCollection<Query> Queries
+        {
+            get
+            {
+                return m_Queries;
+            }
+        }
+
         public Database()
         {
 

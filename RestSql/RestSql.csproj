@@ -63,6 +63,7 @@
     <Compile Include="Data\mysql\ConnectionSettings.cs" />
     <Compile Include="Data\mysql\Database.cs" />
     <Compile Include="Data\mysql\Entity.cs" />
+    <Compile Include="Data\mysql\Query.cs" />
     <Compile Include="Data\Property.cs" />
     <Compile Include="Data\Query.cs" />
     <Compile Include="Dialogs\DatabaseConfigDlg.xaml.cs">

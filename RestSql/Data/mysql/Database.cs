@@ -22,6 +22,7 @@ namespace RestSql.Data.mysql
         {
             base.Connect();
             LoadEntities();
+            LoadQueries();
         }
 
         public override string getConnectionString()
@@ -58,6 +59,32 @@ namespace RestSql.Data.mysql
                 reader.Close();
                 foreach(Entity ent in Entities)
                     ent.Load(dbConn);
+            }
+        }
+
+        public override void LoadQueries()
+        {
+            MySql.Data.MySqlClient.MySqlConnection dbConn = this.ActiveConnection as MySql.Data.MySqlClient.MySqlConnection;
+            if (dbConn != null && dbConn.State == System.Data.ConnectionState.Open)
+            {
+                // get procedures
+                String sql = "SHOW PROCEDURE STATUS;";
+                //String sql = "SHOW FUNCTION STATUS;";
+                var cmd = dbConn.CreateCommand();
+                cmd.CommandText = sql;
+                var reader = cmd.ExecuteReader();
+                Queries.Clear();
+                while (reader.HasRows && reader.Read())
+                {
+                    Query q = new Query();
+                    q.Name = reader[1].ToString();
+                    Queries.Add(q);
+                }
+                reader.Close();
+                foreach(Query q in Queries)
+                {
+                    q.Load(dbConn);
+                }
             }
         }
     }

@@ -40,31 +40,17 @@ namespace RestSql.Tabs
         public QueriesTab()
         {
             InitializeComponent();
-            lsb_Procedures.DataContext = this;
         }
-
-        public void loadProcedures(MySql.Data.MySqlClient.MySqlConnection dbConn)
-        {
-            if (dbConn != null && dbConn.State == System.Data.ConnectionState.Open)
-            {
-                m_DbConn = dbConn;
-                // get procedures
-                String sql = "SHOW PROCEDURE STATUS;";
-                var cmd = m_DbConn.CreateCommand();
-                cmd.CommandText = sql;
-                var reader = cmd.ExecuteReader();
-                Procedures.Clear();
-                while (reader.HasRows && reader.Read())
-                {
-                    Procedures.Add(reader[1].ToString());
-                }
-                reader.Close();
-            }
-        }
-
+        
         private void lsb_Procedures_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // get procedure description
+            this.DataContext = lsb_Procedures.SelectedItem;
+        }
+
+        private void UserControl_LayoutUpdated(object sender, EventArgs e)
+        {
+            if (Settings.Instance.ActiveDatabase != null)
+                lsb_Procedures.ItemsSource = Settings.Instance.ActiveDatabase.Queries;
         }
     }
 }

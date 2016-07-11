@@ -10,6 +10,7 @@ namespace RestSql.Data
     {
         public String Name { get; set; }
         public String Type { get; set; }
+        public String Direction { get; set; }
         public String Description { get; set; }
         protected Guid m_Hash = Guid.NewGuid();
 
