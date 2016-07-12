@@ -66,6 +66,7 @@
     <Compile Include="Data\mysql\Query.cs" />
     <Compile Include="Data\Property.cs" />
     <Compile Include="Data\Query.cs" />
+    <Compile Include="Data\User.cs" />
     <Compile Include="Dialogs\DatabaseConfigDlg.xaml.cs">
       <DependentUpon>DatabaseConfigDlg.xaml</DependentUpon>
     </Compile>
@@ -78,6 +79,9 @@
     </Compile>
     <Compile Include="Tabs\EntitiesTab.xaml.cs">
       <DependentUpon>EntitiesTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Tabs\UserTab.xaml.cs">
+      <DependentUpon>UserTab.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\DatabaseConfigDlg.xaml">
       <SubType>Designer</SubType>
@@ -104,6 +108,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Tabs\EntitiesTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Tabs\UserTab.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

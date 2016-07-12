@@ -8,6 +8,14 @@ namespace RestSql
 {
     public class Settings : INotifyPropertyChanged
     {
+        protected ObservableCollection<Data.User> m_Users = new ObservableCollection<Data.User>();
+        public ObservableCollection<Data.User> Users
+        {
+            get
+            {
+                return m_Users;
+            }
+        }
         protected ObservableCollection<Data.Database> m_Databases = new ObservableCollection<Data.Database>();
         public ObservableCollection<Data.Database> Databases
         {
@@ -16,6 +24,7 @@ namespace RestSql
                 return m_Databases;
             }
         }
+
         public Data.Database ActiveDatabase
         {
             get
@@ -75,6 +84,20 @@ namespace RestSql
             if (index > -1)
                 Databases.RemoveAt(index);
             AddDatabase(db);
+        }
+
+        public void AddUser(Data.User user)
+        {
+            if (!Users.Contains(user))
+                Users.Add(user);
+        }
+
+        public void ReplaceUser(Data.User user)
+        {
+            int index = Users.IndexOf(user);
+            if (index > -1)
+                Users.RemoveAt(index);
+            AddUser(user);
         }
 
         public void Load()

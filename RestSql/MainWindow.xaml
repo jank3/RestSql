@@ -32,6 +32,9 @@
             <TabItem Header="Procedures">
                 <tabs:QueriesTab></tabs:QueriesTab>
             </TabItem>
+            <TabItem Header="Users">
+                <tabs:UserTab></tabs:UserTab>
+            </TabItem>
         </TabControl>
 
     </Grid>
