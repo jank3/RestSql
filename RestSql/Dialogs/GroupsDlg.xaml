@@ -1,0 +1,63 @@
+﻿<UserControl x:Class="RestSql.Dialogs.GroupsDlg"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RestSql.Dialogs"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="500">
+    <Grid Background="#FFE5E5E5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="37*"/>
+            <ColumnDefinition Width="26"/>
+            <ColumnDefinition Width="37*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="26"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="26"/>
+            </Grid.RowDefinitions>
+            <Label x:Name="lbl_AvGroups"
+                   Grid.Row="0"
+                   Content="Available Groups"></Label>
+            <ListBox x:Name="lsb_AvGroups"
+                     Grid.Row="1"
+                     Margin="2"
+                     HorizontalAlignment="Stretch"></ListBox>
+            <StackPanel Orientation="Horizontal"
+                        Grid.Row="2">
+                <Button x:Name="btn_AddAvGroup"
+                        Margin="2"
+                        Content="Add" Click="btn_AddAvGroup_Click"></Button>
+                <Button x:Name="btn_DeleteAvGroup"
+                        Margin="2"
+                        Content="Delete" Click="btn_DeleteAvGroup_Click"></Button>
+            </StackPanel>
+        </Grid>
+        <StackPanel Grid.Column="1"
+                    VerticalAlignment="Center"
+                    >
+            <Button x:Name="btn_AddGroup"
+                    Margin="2"
+                    Content=">" Click="btn_AddGroup_Click"></Button>
+            <Button x:Name="btn_RemoveGroup"
+                    Margin="2"
+                    Content="--" Click="btn_RemoveGroup_Click"></Button>
+        </StackPanel>
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="26"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="26"/>
+            </Grid.RowDefinitions>
+            <Label x:Name="lbl_UserGroups"
+                   Grid.Row="0"
+                   Content="User Groups"></Label>
+            <ListBox x:Name="lsb_UserGroups"
+                     Grid.Row="1"
+                     Margin="2"
+                     HorizontalAlignment="Stretch"></ListBox>
+        </Grid>
+    </Grid>
+</UserControl>

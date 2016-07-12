@@ -38,6 +38,8 @@
     <Reference Include="MySql.Data, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -70,6 +72,13 @@
     <Compile Include="Dialogs\DatabaseConfigDlg.xaml.cs">
       <DependentUpon>DatabaseConfigDlg.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\Dialog.xaml.cs">
+      <DependentUpon>Dialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\DialogBase.cs" />
+    <Compile Include="Dialogs\GroupsDlg.xaml.cs">
+      <DependentUpon>GroupsDlg.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="Tabs\DatabaseTab.xaml.cs">
       <DependentUpon>DatabaseTab.xaml</DependentUpon>
@@ -83,7 +92,16 @@
     <Compile Include="Tabs\UserTab.xaml.cs">
       <DependentUpon>UserTab.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\Controls.cs" />
     <Page Include="Dialogs\DatabaseConfigDlg.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\GroupsDlg.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

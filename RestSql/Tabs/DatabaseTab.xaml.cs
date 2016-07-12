@@ -117,19 +117,7 @@ namespace RestSql.Tabs
 
         private void btn_Delete_Click(object sender, RoutedEventArgs e)
         {
-            int index = lsb_Databases.SelectedIndex;
-            if(index > -1)
-            {
-                if (MessageBox.Show(
-                       String.Format("Are you sure you want to delete the {0} database?",
-                                     Settings.Instance.Databases[index].Name),
-                       "Confirm", MessageBoxButton.YesNo)
-                    == MessageBoxResult.Yes)
-                {
-                    Settings.Instance.Databases.RemoveAt(index);
-                    lsb_Databases.SelectedIndex = -1;
-                }
-            }
+            Utilities.Controls.ConfirmDelete(lsb_Databases, Settings.Instance.Databases);
         }
 
         private void cmb_DatabaseType_SelectionChanged(object sender, SelectionChangedEventArgs e)

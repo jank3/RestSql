@@ -89,9 +89,13 @@
                     <Button x:Name="btn_SetAuthGroups"
                             Content="Authorized Groups"
                             Margin="4"
-                            HorizontalAlignment="Left"/>
+                            HorizontalAlignment="Left" Click="btn_SetAuthGroups_Click"/>
                 </StackPanel>
             </Border>
+            <CheckBox x:Name="cbx_AllowRegistration"
+                      VerticalAlignment="Bottom"
+                      IsChecked="{Binding UserRegistration}"
+                      Content="Allow users to register"></CheckBox>
         </StackPanel>
     </StackPanel>
 </UserControl>

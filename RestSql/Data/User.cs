@@ -12,7 +12,14 @@ namespace RestSql.Data
     {
         public String UserName { get; set; }
         public SecureString Password { get; set; }
-        public List<String> Groups { get; set; }
+        protected ObservableCollection<String> m_Groups = new ObservableCollection<String>();
+        public ObservableCollection<String> Groups
+        {
+            get
+            {
+                return m_Groups;
+            }
+        }
         public bool ResetPassword { get; set; }
         public bool Disabled { get; set; }
         public bool IsAdmin { get; set; }

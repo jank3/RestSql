@@ -24,6 +24,27 @@ namespace RestSql
                 return m_Databases;
             }
         }
+        protected ObservableCollection<String> m_Groups = new ObservableCollection<String>();
+        public ObservableCollection<String> Groups
+        {
+            get
+            {
+                return m_Groups;
+            }
+        }
+        protected bool m_UserRegistration = false;
+        public bool UserRegistration
+        {
+            get
+            {
+                return m_UserRegistration;
+            }
+            set
+            {
+                m_UserRegistration = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         public Data.Database ActiveDatabase
         {

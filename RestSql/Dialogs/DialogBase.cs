@@ -4,35 +4,27 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace RestSql.Dialogs
 {
     /// <summary>
-    /// Interaction logic for DatabaseConfigDlg.xaml
+    /// This is just a reference class to copy to a class
+    /// that uses the dialog window.
     /// </summary>
-    public partial class DatabaseConfigDlg : UserControl
+    public class DialogBase : UserControl
     {
         public String Title { get; set; }
         public EventHandler Closed;
         public CancelEventHandler Closing;
 
-        public DatabaseConfigDlg()
+        private void Constructor()
         {
-            InitializeComponent();
-
-            Title = "Database Config";
+            Title = "Window Title";
             Closing += dlg_Closing;
             Closed += dlg_Closed;
         }
+
         public void Show()
         {
             Dialog dlg = new Dialog();

@@ -10,9 +10,9 @@
              d:DesignHeight="300" d:DesignWidth="500">
     <Grid
           ScrollViewer.HorizontalScrollBarVisibility="Auto"
-          ScrollViewer.VerticalScrollBarVisibility="Auto">
-        <StackPanel Orientation="Horizontal"
-                    Background="#FFE5E5E5">
+          ScrollViewer.VerticalScrollBarVisibility="Auto"
+          Background="#FFE5E5E5">
+        <StackPanel Orientation="Horizontal">
             <Grid Margin="4"
                         VerticalAlignment="Stretch"
                         Width="129">

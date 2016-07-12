@@ -27,6 +27,7 @@ namespace RestSql.Tabs
             DataContext = new Data.User() { UserName = "New user" };
             lsb_Users.Items.Clear();
             lsb_Users.ItemsSource = Settings.Instance.Users;
+            cbx_AllowRegistration.DataContext = Settings.Instance;
         }
 
         private void UserControl_LayoutUpdated(object sender, EventArgs e)
@@ -47,19 +48,7 @@ namespace RestSql.Tabs
 
         private void btn_Delete_Click(object sender, RoutedEventArgs e)
         {
-            int index = lsb_Users.SelectedIndex;
-            if (index > -1)
-            {
-                if (MessageBox.Show(
-                       String.Format("Are you sure you want to delete the {0} user?",
-                                     Settings.Instance.Users[index].UserName),
-                       "Confirm", MessageBoxButton.YesNo)
-                    == MessageBoxResult.Yes)
-                {
-                    Settings.Instance.Users.RemoveAt(index);
-                    lsb_Users.SelectedIndex = -1;
-                }
-            }
+            Utilities.Controls.ConfirmDelete(lsb_Users, Settings.Instance.Users);
         }
 
         private void lsb_Users_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -69,6 +58,18 @@ namespace RestSql.Tabs
             {
                 DataContext = Settings.Instance.Users[index];
             }
+        }
+
+        private void btn_SetAuthGroups_Click(object sender, RoutedEventArgs e)
+        {
+            int index = lsb_Users.SelectedIndex;
+            if (index > -1)
+            {
+                Dialogs.GroupsDlg dlg = new Dialogs.GroupsDlg(
+                    Settings.Instance.Users[index]);
+                dlg.Show();
+            }
+
         }
     }
 }
