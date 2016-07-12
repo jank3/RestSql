@@ -2,12 +2,20 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data.Common;
+using System.IO;
+using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization.Formatters.Soap;
+using System.Text;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace RestSql
 {
+    [Serializable]
     public class Settings : INotifyPropertyChanged
     {
+        
         protected ObservableCollection<Data.User> m_Users = new ObservableCollection<Data.User>();
         public ObservableCollection<Data.User> Users
         {
@@ -46,6 +54,7 @@ namespace RestSql
             }
         }
 
+        [System.Xml.Serialization.XmlIgnoreAttribute]
         public Data.Database ActiveDatabase
         {
             get
@@ -62,23 +71,39 @@ namespace RestSql
                 return db;
             }
         }
-        protected String m_ProjectPath = "";
-        public String ProjectPath
+        [NonSerialized]
+        protected String m_ProjectFile = "";
+        [System.Xml.Serialization.XmlIgnoreAttribute]
+        public String ProjectFile
         {
             get
             {
-                return m_ProjectPath;
+                return m_ProjectFile;
             }
             set
             {
-                m_ProjectPath = value;
+                m_ProjectFile = value;
                 NotifyPropertyChanged();
             }
         }
+        [NonSerialized]
         protected bool m_Dirty = false;
-        public bool Dirty { get { return m_Dirty; } }
+        [System.Xml.Serialization.XmlIgnoreAttribute]
+        public bool Dirty
+        {
+            get
+            {
+                return m_Dirty;
+            }
+            set
+            {
+                m_Dirty = value;
+            }
+        }
 
+        [NonSerialized]
         protected static Settings m_Instance = null;
+        [System.Xml.Serialization.XmlIgnoreAttribute]
         public static Settings Instance
         {
             get
@@ -91,6 +116,24 @@ namespace RestSql
 
         protected Settings()
         {
+            Users.CollectionChanged += Users_CollectionChanged;
+            Databases.CollectionChanged += Databases_CollectionChanged;
+            Groups.CollectionChanged += Groups_CollectionChanged;
+        }
+
+        private void Groups_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            Dirty = true;
+        }
+
+        private void Databases_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            Dirty = true;
+        }
+
+        private void Users_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            Dirty = true;
         }
 
         public void AddDatabase(Data.Database db)
@@ -123,12 +166,72 @@ namespace RestSql
 
         public void Load()
         {
-
+            m_Dirty = false;
+            if (File.Exists(ProjectFile))
+            {
+                String xml = File.ReadAllText(ProjectFile);
+                this.LoadXml(xml);
+            }
         }
 
         public void Save()
         {
             m_Dirty = false;
+            //if(File.Exists(ProjectFile))
+            {
+                String xml = this.ToXml();
+                if (File.Exists(ProjectFile))
+                    File.Delete(ProjectFile);
+                File.WriteAllText(ProjectFile, xml);
+            }
+        }
+
+        public String ToXml()
+        {
+            StringBuilder xml = new StringBuilder();
+            XmlWriterSettings xmlWriterSettings = new XmlWriterSettings()
+            {
+                Indent = true,
+                IndentChars = "\t",
+                NewLineOnAttributes = true
+            };
+            XmlWriter writer = XmlWriter.Create(xml, xmlWriterSettings);
+            writer.WriteStartDocument();
+            writer.WriteStartElement("Settings");
+            writer.WriteStartElement("UserRegistration");
+            writer.WriteString(this.UserRegistration.ToString());
+            writer.WriteEndElement();
+            writer.WriteStartElement("Users");
+            foreach (Data.User item in Users)
+            {
+                item.ToXml(writer);
+            }
+            writer.WriteEndElement();
+            writer.WriteStartElement("Databases");
+            foreach (Data.Database item in Databases)
+            {
+                item.ToXml(writer);
+            }
+            writer.WriteEndElement();
+            writer.WriteStartElement("Groups");
+            foreach (String item in Groups)
+            {
+                writer.WriteStartElement("Group");
+                writer.WriteString(item);
+                writer.WriteEndElement();
+            }
+            writer.WriteEndElement();
+            writer.WriteEndDocument();
+            writer.Flush();
+            writer.Close();
+            return xml.ToString();
+        }
+
+        public void LoadXml(String xml)
+        {
+            XmlDocument xDoc = new XmlDocument();
+            xDoc.LoadXml(xml);
+
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -201,44 +201,56 @@ namespace RestSql.Dialogs
             this.DialogResult = false;
         }
 
-        protected delegate void showMessageDelegate2(FrameworkElement parent, String message, CancelEventHandler onClose);
-        public static void showMessage(FrameworkElement parent, String message, CancelEventHandler onClose)
+        public static bool showMessage(FrameworkElement parent, String message, CancelEventHandler onClose, Dialog.TYPE type = Dialog.TYPE.OK)
+        {
+            Dialog dlg = new Dialog();
+            dlg.setButtons(type);
+            dlg.Closing += onClose;
+            Label lbl = new Label();
+            lbl.Content = message;
+            dlg.addContent(lbl);
+            bool result = (bool)dlg.ShowDialog();
+            return result;
+        }
+
+        protected delegate void showMessageAsyncDelegate2(FrameworkElement parent, String message, CancelEventHandler onClose, Dialog.TYPE type);
+        public static void showMessageAsync(FrameworkElement parent, String message, CancelEventHandler onClose, Dialog.TYPE type = Dialog.TYPE.OK)
         {
             if (parent.Dispatcher.CheckAccess())
             {
-                Dialog dlg = new Dialog();
-                dlg.setButtons(Dialog.TYPE.OK);
-                dlg.Closing += onClose;
-                Label lbl = new Label();
-                lbl.Content = message;
-                dlg.addContent(lbl);
-                dlg.Show();
+                showMessage(parent, message, onClose, type);
             }
             else
             {
-                parent.Dispatcher.BeginInvoke(new showMessageDelegate2(showMessage),
-                    new object[] { parent, message, onClose });
+                parent.Dispatcher.BeginInvoke(new showMessageAsyncDelegate2(showMessageAsync),
+                    new object[] { parent, message, onClose, type });
             }
         }
 
-        public delegate void showMessageDelegate(FrameworkElement parent, String message, String title);
-        public static void showMessage(FrameworkElement parent, String message, String title = "")
+        public static bool showMessage(FrameworkElement parent, String message, String title = "", Dialog.TYPE type = Dialog.TYPE.OK)
+        {
+            Dialog dlg = new Dialog();
+            if (!String.IsNullOrEmpty(title))
+                dlg.Title = title;
+            dlg.setButtons(type);
+            Label lbl = new Label();
+            lbl.Content = message;
+            dlg.addContent(lbl);
+            bool result = (bool)dlg.ShowDialog();
+            return result;
+        }
+
+        public delegate void showMessageDelegate(FrameworkElement parent, String message, String title, Dialog.TYPE type);
+        public static void showMessageAsync(FrameworkElement parent, String message, String title = "", Dialog.TYPE type = Dialog.TYPE.OK)
         {
             if (parent.Dispatcher.CheckAccess())
             {
-                Dialog dlg = new Dialog();
-                if (!String.IsNullOrEmpty(title))
-                    dlg.Title = title;
-                dlg.setButtons(Dialog.TYPE.OK);
-                Label lbl = new Label();
-                lbl.Content = message;
-                dlg.addContent(lbl);
-                dlg.Show();
+                showMessage(parent, message, title, type);
             }
             else
             {
-                parent.Dispatcher.BeginInvoke(new showMessageDelegate(showMessage),
-                    new object[] { parent, message, title });
+                parent.Dispatcher.BeginInvoke(new showMessageDelegate(showMessageAsync),
+                    new object[] { parent, message, title, type });
             }
         }
 

@@ -69,6 +69,7 @@
                         <PasswordBox x:Name="txb_Password"
                                      Grid.Row="1"
                                      Grid.Column="1"
+                                     PasswordChanged="txb_Password_PasswordChanged"
                                      Margin="0,4"/>
                     </Grid>
                     <CheckBox x:Name="cbx_ChangePassword"

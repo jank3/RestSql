@@ -48,8 +48,9 @@
                 <TextBox x:Name="txb_UserName"
                          Text="{Binding UserName}" HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" Width="227" Margin="5,0,0,0"/>
                 <Label x:Name="label4" Content="Password:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                <TextBox x:Name="txb_Password"
-                         Text="{Binding Password}" HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" Width="227" Margin="5,0,0,0"/>
+                <PasswordBox x:Name="txb_Password"
+                             PasswordChanged="txb_Password_PasswordChanged"
+                         HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" Width="227" Margin="5,0,0,0"/>
                 <Label x:Name="label5" Content="Database Type:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                 <ComboBox x:Name="cmb_DatabaseType"
                           Text="{Binding DatabaseType}"

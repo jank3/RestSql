@@ -129,5 +129,14 @@ namespace RestSql.Tabs
                     (Data.DatabaseTypes.DB_TYPES)e.AddedItems[0]);
             }
         }
+
+        private void txb_Password_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is Data.Database)
+            {
+                Data.Database db = DataContext as Data.Database;
+                Utilities.String.setSecureString(db.Password, txb_Password.Password);
+            }
+        }
     }
 }

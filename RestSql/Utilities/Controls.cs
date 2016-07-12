@@ -16,7 +16,7 @@ namespace RestSql.Utilities
             if (index > -1)
             {
                 if (MessageBox.Show(
-                       String.Format("Are you sure you want to delete the {0} item?",
+                       System.String.Format("Are you sure you want to delete the {0} item?",
                                      items[index].ToString()),
                        "Confirm", MessageBoxButton.YesNo)
                     == MessageBoxResult.Yes)

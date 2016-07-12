@@ -39,6 +39,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -93,6 +94,7 @@
       <DependentUpon>UserTab.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utilities\Controls.cs" />
+    <Compile Include="Utilities\String.cs" />
     <Page Include="Dialogs\DatabaseConfigDlg.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

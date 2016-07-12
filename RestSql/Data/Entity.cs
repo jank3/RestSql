@@ -1,30 +1,152 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace RestSql.Data
 {
-    public class Entity
+    [Serializable]
+    public class Entity : INotifyPropertyChanged
     {
-        public String Name { get; set; }
-        protected List<Property> m_Properties = new List<Property>();
-        public List<Property> Properties
+        protected String m_Name = "";
+        public String Name
+        {
+            get
+            {
+                return m_Name;
+            }
+            set
+            {
+                m_Name = value;
+                NotifyPropertyChanged();
+            }
+        }
+        protected ObservableCollection<Property> m_Properties = new ObservableCollection<Property>();
+        public ObservableCollection<Property> Properties
         {
             get
             {
                 return m_Properties;
             }
         }
-        public String Description { get; set; }
-        public bool GetVisible { get; set; }
-        public bool GetAuth { get; set; }
-        public List<String> GetAuthGroups { get; set; }
-        public bool SaveVisible { get; set; }
-        public bool SaveAuth { get; set; }
-        public List<String> SaveAuthGroups { get; set; }
+        protected String m_Description = "";
+        public String Description
+        {
+            get
+            {
+                return m_Description;
+            }
+            set
+            {
+                m_Description = value;
+                NotifyPropertyChanged();
+            }
+        }
+        protected bool m_GetVisible = false;
+        public bool GetVisible
+        {
+            get
+            {
+                return m_GetVisible;
+            }
+            set
+            {
+                m_GetVisible = value;
+                NotifyPropertyChanged();
+            }
+        }
+        protected bool m_GetAuth = false;
+        public bool GetAuth
+        {
+            get
+            {
+                return m_GetAuth;
+            }
+            set
+            {
+                m_GetAuth = value;
+                NotifyPropertyChanged();
+            }
+        }
+        protected ObservableCollection<String> m_GetAuthGroups = new ObservableCollection<String>();
+        public ObservableCollection<String> GetAuthGroups
+        {
+            get
+            {
+                return m_GetAuthGroups;
+            }
+            set
+            {
+                m_GetAuthGroups = value;
+            }
+        }
+        protected bool m_SaveVisible = false;
+        public bool SaveVisible
+        {
+            get
+            {
+                return m_SaveVisible;
+            }
+            set
+            {
+                m_SaveVisible = value;
+                NotifyPropertyChanged();
+            }
+        }
+        protected bool m_SaveAuth = false;
+        public bool SaveAuth
+        {
+            get
+            {
+                return m_SaveAuth;
+            }
+            set
+            {
+                m_SaveAuth = value;
+                NotifyPropertyChanged();
+            }
+        }
+        protected ObservableCollection<String> m_SaveAuthGroups = new ObservableCollection<String>();
+        public ObservableCollection<String> SaveAuthGroups
+        {
+            get
+            {
+                return m_SaveAuthGroups;
+            }
+            set
+            {
+                m_SaveAuthGroups = value;
+            }
+        }
+        [NonSerialized]
         protected Guid m_Hash = Guid.NewGuid();
+
+        public Entity()
+        {
+            Properties.CollectionChanged += Properties_CollectionChanged;
+            GetAuthGroups.CollectionChanged += GetAuthGroups_CollectionChanged;
+            SaveAuthGroups.CollectionChanged += SaveAuthGroups_CollectionChanged;
+        }
+
+        private void SaveAuthGroups_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            RestSql.Settings.Instance.Dirty = true;
+        }
+
+        private void GetAuthGroups_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            RestSql.Settings.Instance.Dirty = true;
+        }
+
+        private void Properties_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            RestSql.Settings.Instance.Dirty = true;
+        }
 
         public virtual void Load(System.Data.Common.DbConnection dbConn)
         {
@@ -69,6 +191,78 @@ namespace RestSql.Data
         public override string ToString()
         {
             return Name;
+        }
+
+        public void ToXml(XmlWriter writer)
+        {
+            writer.WriteStartElement("Entity");
+            writer.WriteStartElement("SaveAuthGroups");
+            foreach(String item in SaveAuthGroups)
+            {
+                writer.WriteStartElement("SaveAuthGroup");
+                writer.WriteString(item);
+                writer.WriteEndElement();
+            }
+            writer.WriteEndElement();
+            writer.WriteStartElement("SaveAuth");
+            writer.WriteString(SaveAuth.ToString());
+            writer.WriteEndElement();
+            writer.WriteStartElement("SaveVisible");
+            writer.WriteString(SaveVisible.ToString());
+            writer.WriteEndElement();
+            writer.WriteStartElement("GetAuthGroups");
+            foreach (String item in GetAuthGroups)
+            {
+                writer.WriteStartElement("GetAuthGroup");
+                writer.WriteString(item);
+                writer.WriteEndElement();
+            }
+            writer.WriteEndElement();
+            writer.WriteStartElement("GetAuth");
+            writer.WriteString(GetAuth.ToString());
+            writer.WriteEndElement();
+            writer.WriteStartElement("GetVisible");
+            writer.WriteString(GetVisible.ToString());
+            writer.WriteEndElement();
+            writer.WriteStartElement("Description");
+            writer.WriteString(Description);
+            writer.WriteEndElement();
+            writer.WriteStartElement("Properties");
+            foreach (Property item in Properties)
+            {
+                if(item != null)
+                    item.ToXml(writer);
+            }
+            writer.WriteEndElement();
+            writer.WriteStartElement("Name");
+            writer.WriteString(Name);
+            writer.WriteEndElement();
+            writer.WriteEndElement();
+        }
+
+        public String ToXml()
+        {
+            StringBuilder xml = new StringBuilder();
+            XmlWriter writer = XmlWriter.Create(xml);
+            ToXml(writer);
+            writer.Flush();
+            writer.Close();
+            return xml.ToString();
+        }
+
+        public void LoadXml()
+        {
+
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            RestSql.Settings.Instance.Dirty = true;
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
 }

@@ -3,6 +3,9 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data.Common;
 using System.Runtime.CompilerServices;
+using System.Security;
+using System.Text;
+using System.Xml;
 
 namespace RestSql.Data
 {
@@ -48,8 +51,8 @@ namespace RestSql.Data
                 NotifyPropertyChanged();
             }
         }
-        protected String m_Password;
-        public String Password
+        protected SecureString m_Password = new SecureString();
+        public SecureString Password
         {
             get
             {
@@ -87,7 +90,9 @@ namespace RestSql.Data
                 NotifyPropertyChanged();
             }
         }
+        [NonSerialized]
         protected DbConnection m_ActiveConnection = null;
+        [System.Xml.Serialization.XmlIgnoreAttribute]
         public DbConnection ActiveConnection
         {
             get
@@ -100,6 +105,7 @@ namespace RestSql.Data
                 NotifyPropertyChanged();
             }
         }
+        [System.Xml.Serialization.XmlIgnoreAttribute]
         public bool IsOpen
         {
             get
@@ -110,6 +116,7 @@ namespace RestSql.Data
                 return open;
             }
         }
+        [NonSerialized]
         protected Guid m_Hash = Guid.NewGuid();
 
         protected ObservableCollection<Entity> m_Entities = new ObservableCollection<Entity>();
@@ -219,9 +226,49 @@ namespace RestSql.Data
             return BitConverter.ToInt32(m_Hash.ToByteArray(), 0);
         }
 
+        public void ToXml(XmlWriter writer)
+        {
+            writer.WriteStartElement("Database");
+            writer.WriteStartElement("DatabaseType");
+            writer.WriteString(Enum.GetName(typeof(DatabaseTypes.DB_TYPES), DatabaseType));
+            writer.WriteEndElement();
+            if(Settings != null)
+                Settings.ToXml(writer);
+            writer.WriteStartElement("Password");
+            if(Password != null)
+                writer.WriteString(Utilities.String.ConvertToUnsecureString(Password));
+            writer.WriteEndElement();
+            writer.WriteStartElement("UserName");
+            writer.WriteString(UserName);
+            writer.WriteEndElement();
+            writer.WriteStartElement("Name");
+            writer.WriteString(Name);
+            writer.WriteEndElement();
+            writer.WriteStartElement("ServerAddress");
+            writer.WriteString(ServerAddress);
+            writer.WriteEndElement();
+            writer.WriteEndElement();
+        }
+
+        public String ToXml()
+        {
+            StringBuilder xml = new StringBuilder();
+            XmlWriter writer = XmlWriter.Create(xml);
+            ToXml(writer);
+            writer.Flush();
+            writer.Close();
+            return xml.ToString();
+        }
+
+        public void LoadXml()
+        {
+
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
+            RestSql.Settings.Instance.Dirty = true;
             if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));

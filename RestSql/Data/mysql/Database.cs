@@ -32,7 +32,7 @@ namespace RestSql.Data.mysql
                 ServerAddress,
                 Name,
                 UserName,
-                Password);
+                Utilities.String.ConvertToUnsecureString(Password));
             // TODO : Add ConnectionSettings
 
             return connStr;

@@ -71,5 +71,14 @@ namespace RestSql.Tabs
             }
 
         }
+
+        private void txb_Password_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if(DataContext is Data.User)
+            {
+                Data.User user = DataContext as Data.User;
+                Utilities.String.setSecureString(user.Password, txb_Password.Password);
+            }
+        }
     }
 }
