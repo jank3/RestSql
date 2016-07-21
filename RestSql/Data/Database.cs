@@ -229,6 +229,7 @@ namespace RestSql.Data
         public void ToXml(XmlWriter writer)
         {
             writer.WriteStartElement("Database");
+            writer.WriteAttributeString("type", this.GetType().ToString());
             writer.WriteStartElement("DatabaseType");
             writer.WriteString(Enum.GetName(typeof(DatabaseTypes.DB_TYPES), DatabaseType));
             writer.WriteEndElement();
@@ -247,6 +248,20 @@ namespace RestSql.Data
             writer.WriteStartElement("ServerAddress");
             writer.WriteString(ServerAddress);
             writer.WriteEndElement();
+
+            writer.WriteStartElement("Entities");
+            foreach (Data.Entity item in Entities)
+            {
+                item.ToXml(writer);
+            }
+            writer.WriteEndElement();
+            writer.WriteStartElement("Queries");
+            foreach (Data.Query item in Queries)
+            {
+                item.ToXml(writer);
+            }
+            writer.WriteEndElement();
+            
             writer.WriteEndElement();
         }
 
@@ -260,9 +275,58 @@ namespace RestSql.Data
             return xml.ToString();
         }
 
-        public void LoadXml()
+        public static Database LoadXml(XmlNode node)
         {
-
+            Database db = null;
+            if(node.Name == "Database")
+            {
+                db = new Database();
+                if (node.Attributes["type"] != null)
+                    db = (Database)Utilities.Reflection.newType(node.Attributes["type"].Value);
+                foreach (XmlNode cNode in node.ChildNodes)
+                {
+                    switch(cNode.Name)
+                    {
+                        case "DatabaseType":
+                            db.DatabaseType = DatabaseTypes.DB_TYPES.UNKNOWN;
+                            if (cNode.InnerText != null)
+                            {
+                                db.DatabaseType = DatabaseTypes.convert(cNode.InnerText);
+                            }
+                            break;
+                        case "Password":
+                            Utilities.String.setSecureString(db.Password, cNode.InnerText);
+                            break;
+                        case "UserName":
+                            db.UserName = cNode.InnerText;
+                            break;
+                        case "Name":
+                            db.Name = cNode.InnerText;
+                            break;
+                        case "ServerAddress":
+                            db.ServerAddress = cNode.InnerText;
+                            break;
+                        case "ConnectionSettings":
+                            db.Settings.LoadXml(cNode);
+                            break;
+                        case "Entities":
+                            db.Entities.Clear();
+                            foreach (XmlNode child in cNode.ChildNodes)
+                            {
+                                db.Entities.Add(Data.Entity.LoadXml(child));
+                            }
+                            break;
+                        case "Queries":
+                            db.Queries.Clear();
+                            foreach (XmlNode child in cNode.ChildNodes)
+                            {
+                                db.Queries.Add(Data.Query.LoadXml(child));
+                            }
+                            break;
+                    }
+                }
+            }
+            return db;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

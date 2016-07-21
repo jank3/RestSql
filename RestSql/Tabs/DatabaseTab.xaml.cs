@@ -96,6 +96,10 @@ namespace RestSql.Tabs
             if (index > -1 && index < Settings.Instance.Databases.Count)
             {
                 DataContext = Settings.Instance.Databases[index];
+                txb_Password.Password = Utilities.String.ConvertToUnsecureString(
+                    Settings.Instance.Databases[index].Password);
+
+                Settings.Instance.ActiveDatabase = Settings.Instance.Databases[index];
             }
         }
 

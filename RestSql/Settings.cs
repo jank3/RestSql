@@ -54,21 +54,34 @@ namespace RestSql
             }
         }
 
+        protected Data.Database m_ActiveDatabase = null;
         [System.Xml.Serialization.XmlIgnoreAttribute]
         public Data.Database ActiveDatabase
         {
             get
             {
                 Data.Database db = null;
-                foreach(Data.Database db2 in m_Databases)
+                if (m_ActiveDatabase == null)
                 {
-                    if(db2.IsOpen)
+                    foreach (Data.Database db2 in m_Databases)
                     {
-                        db = db2;
-                        break;
+                        if (db2.IsOpen)
+                        {
+                            db = db2;
+                            break;
+                        }
                     }
                 }
+                else
+                    db = m_ActiveDatabase;
                 return db;
+            }
+            set
+            {
+                m_ActiveDatabase = value;
+                NotifyPropertyChanged();
+                if (ActiveDbChanged != null)
+                    ActiveDbChanged(this, new EventArgs());
             }
         }
         [NonSerialized]
@@ -113,6 +126,8 @@ namespace RestSql
                 return m_Instance;
             }
         }
+
+        public event EventHandler ActiveDbChanged;
 
         protected Settings()
         {
@@ -231,7 +246,46 @@ namespace RestSql
         {
             XmlDocument xDoc = new XmlDocument();
             xDoc.LoadXml(xml);
-
+            XmlNode settingsNode = null;
+            for (int i = 0; i < xDoc.ChildNodes.Count; i++)
+                if (xDoc.ChildNodes[i].Name == "Settings")
+                    settingsNode = xDoc.ChildNodes[i];
+            if(settingsNode != null)
+            {
+                for(int i = 0; i < settingsNode.ChildNodes.Count; i++)
+                {
+                    XmlNode cNode = settingsNode.ChildNodes[i];
+                    switch(cNode.Name)
+                    {
+                        case "UserRegistration":
+                            bool val = false;
+                            bool.TryParse(cNode.InnerText, out val);
+                            UserRegistration = val;
+                            break;
+                        case "Users":
+                            Users.Clear();
+                            foreach(XmlNode child in cNode.ChildNodes)
+                            {
+                                Users.Add(Data.User.LoadXml(child));
+                            }
+                            break;
+                        case "Databases":
+                            Databases.Clear();
+                            foreach (XmlNode child in cNode.ChildNodes)
+                            {
+                                Databases.Add(Data.Database.LoadXml(child));
+                            }
+                            break;
+                        case "Groups":
+                            Groups.Clear();
+                            foreach (XmlNode child in cNode.ChildNodes)
+                            {
+                                Groups.Add(child.InnerText);
+                            }
+                            break;
+                    }
+                }
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

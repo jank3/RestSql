@@ -94,6 +94,7 @@
       <DependentUpon>UserTab.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utilities\Controls.cs" />
+    <Compile Include="Utilities\Reflection.cs" />
     <Compile Include="Utilities\String.cs" />
     <Page Include="Dialogs\DatabaseConfigDlg.xaml">
       <SubType>Designer</SubType>

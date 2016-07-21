@@ -145,9 +145,48 @@ namespace RestSql.Data
             return xml.ToString();
         }
 
-        public void LoadXml()
+        public static User LoadXml(XmlNode node)
         {
-
+            User user = null;
+            if(node.Name == "User")
+            {
+                user = new User();
+                foreach(XmlNode cNode in node.ChildNodes)
+                {
+                    bool val = false;
+                    switch (cNode.Name)
+                    {
+                        case "IsAdmin":
+                            bool.TryParse(cNode.InnerText, out val);
+                            user.IsAdmin = val;
+                            break;
+                        case "Disabled":
+                            val = false;
+                            bool.TryParse(cNode.InnerText, out val);
+                            user.Disabled = val;
+                            break;
+                        case "ResetPassword":
+                            val = false;
+                            bool.TryParse(cNode.InnerText, out val);
+                            user.ResetPassword = val;
+                            break;
+                        case "Groups":
+                            user.Groups.Clear();
+                            foreach (XmlNode child in cNode.ChildNodes)
+                            {
+                                user.Groups.Add(child.InnerText);
+                            }
+                            break;
+                        case "Password":
+                            Utilities.String.setSecureString(user.Password, cNode.InnerText);
+                            break;
+                        case "UserName":
+                            user.UserName = cNode.InnerText;
+                            break;
+                    }
+                }
+            }
+            return user;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

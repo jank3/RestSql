@@ -134,6 +134,7 @@ namespace RestSql.Data
         public void ToXml(XmlWriter writer)
         {
             writer.WriteStartElement("Query");
+            writer.WriteAttributeString("type", this.GetType().ToString());
             writer.WriteStartElement("AuthGroups");
             foreach(String item in AuthGroups)
             {
@@ -178,9 +179,56 @@ namespace RestSql.Data
             return xml.ToString();
         }
 
-        public void LoadXml()
+        public static Query LoadXml(XmlNode node)
         {
-
+            Query q = null;
+            if(node.Name == "Query")
+            {
+                q = new Query();
+                if (node.Attributes["type"] != null)
+                    q = (Query)Utilities.Reflection.newType(node.Attributes["type"].Value);
+                foreach (XmlNode cNode in node.ChildNodes)
+                {
+                    bool val = false;
+                    switch (cNode.Name)
+                    {
+                        case "AuthGroups":
+                            q.AuthGroups.Clear();
+                            foreach (XmlNode child in cNode.ChildNodes)
+                            {
+                                q.AuthGroups.Add(child.InnerText);
+                            }
+                            break;
+                        case "Auth":
+                            val = false;
+                            bool.TryParse(cNode.InnerText, out val);
+                            q.Auth = val;
+                            break;
+                        case "Visible":
+                            val = false;
+                            bool.TryParse(cNode.InnerText, out val);
+                            q.Visible = val;
+                            break;
+                        case "Description":
+                            q.Description = cNode.InnerText;
+                            break;
+                        case "ReturnType":
+                            q.ReturnType = cNode.InnerText;
+                            break;
+                        case "Parameters":
+                            q.Parameters.Clear();
+                            foreach (XmlNode child in cNode.ChildNodes)
+                            {
+                                q.Parameters.Add(Property.LoadXml(child));
+                            }
+                            break;
+                        case "Name":
+                            q.Name = cNode.InnerText;
+                            break;
+                    }
+                }
+            }
+            return q;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

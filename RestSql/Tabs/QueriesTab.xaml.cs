@@ -40,8 +40,15 @@ namespace RestSql.Tabs
         public QueriesTab()
         {
             InitializeComponent();
+            Settings.Instance.ActiveDbChanged += Instance_ActiveDbChanged;
         }
-        
+
+        private void Instance_ActiveDbChanged(object sender, EventArgs e)
+        {
+            if (Settings.Instance.ActiveDatabase != null)
+                lsb_Procedures.ItemsSource = Settings.Instance.ActiveDatabase.Entities;
+        }
+
         private void lsb_Procedures_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             this.DataContext = lsb_Procedures.SelectedItem;

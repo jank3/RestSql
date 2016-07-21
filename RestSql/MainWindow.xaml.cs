@@ -66,7 +66,7 @@ namespace RestSql
             // Show folder dialog
             String savePath = showSaveFolder(true);
             // set save path
-            if (String.IsNullOrEmpty(savePath))
+            if (!String.IsNullOrEmpty(savePath))
             {
                 Settings.Instance.ProjectFile = savePath;
                 // load selected path

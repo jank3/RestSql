@@ -196,6 +196,7 @@ namespace RestSql.Data
         public void ToXml(XmlWriter writer)
         {
             writer.WriteStartElement("Entity");
+            writer.WriteAttributeString("type", this.GetType().ToString());
             writer.WriteStartElement("SaveAuthGroups");
             foreach(String item in SaveAuthGroups)
             {
@@ -250,9 +251,63 @@ namespace RestSql.Data
             return xml.ToString();
         }
 
-        public void LoadXml()
+        public static Entity LoadXml(XmlNode node)
         {
-
+            Entity ent = null;
+            if(node.Name == "Entity")
+            {
+                ent = new Data.Entity();
+                if (node.Attributes["type"] != null)
+                    ent = (Entity)Utilities.Reflection.newType(node.Attributes["type"].Value);
+                foreach(XmlNode cNode in node.ChildNodes)
+                {
+                    bool val = false;
+                    switch(cNode.Name)
+                    {
+                        case "SaveAuthGroups":
+                            ent.SaveAuthGroups.Clear();
+                            foreach(XmlNode child in cNode.ChildNodes)
+                            {
+                                ent.SaveAuthGroups.Add(child.InnerText);
+                            }
+                            break;
+                        case "SaveAuth":
+                            val = false;
+                            bool.TryParse(cNode.InnerText, out val);
+                            ent.SaveAuth = val;
+                            break;
+                        case "SaveVisible":
+                            val = false;
+                            bool.TryParse(cNode.InnerText, out val);
+                            ent.SaveVisible = val;
+                            break;
+                        case "GetAuthGroups":
+                            ent.GetAuthGroups.Clear();
+                            foreach (XmlNode child in cNode.ChildNodes)
+                            {
+                                ent.GetAuthGroups.Add(child.InnerText);
+                            }
+                            break;
+                        case "GetAuth":
+                            val = false;
+                            bool.TryParse(cNode.InnerText, out val);
+                            ent.GetAuth = val;
+                            break;
+                        case "GetVisible":
+                            val = false;
+                            bool.TryParse(cNode.InnerText, out val);
+                            ent.GetVisible = val;
+                            break;
+                        case "Description":
+                            ent.Description = cNode.InnerText;
+                            break;
+                        case "Name":
+                            ent.Name = cNode.InnerText;
+                            break;
+                    }
+                }
+            }
+            return ent;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -12,11 +12,16 @@ namespace RestSql.Utilities
     {
         public static void setSecureString(SecureString lhs, System.String rhs)
         {
-            int length = rhs.Length;
-            lhs.Clear();
-            for (int i = 0; i < length; i++)
+            if (lhs == null)
+                lhs = new SecureString();
+            if (rhs != null)
             {
-                lhs.AppendChar(rhs[i]);
+                int length = rhs.Length;
+                lhs.Clear();
+                for (int i = 0; i < length; i++)
+                {
+                    lhs.AppendChar(rhs[i]);
+                }
             }
         }
 

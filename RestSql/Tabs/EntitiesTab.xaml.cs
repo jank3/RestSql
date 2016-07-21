@@ -12,6 +12,13 @@ namespace RestSql.Tabs
         public EntitiesTab()
         {
             InitializeComponent();
+            Settings.Instance.ActiveDbChanged += Instance_ActiveDbChanged;
+        }
+
+        private void Instance_ActiveDbChanged(object sender, EventArgs e)
+        {
+            if (Settings.Instance.ActiveDatabase != null)
+                lsb_Tables.ItemsSource = Settings.Instance.ActiveDatabase.Entities;
         }
 
         private void lsb_Tables_SelectionChanged(object sender, SelectionChangedEventArgs e)

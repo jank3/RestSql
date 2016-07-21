@@ -120,10 +120,34 @@ namespace RestSql.Data
             return xml.ToString();
         }
 
-        public void LoadXml()
+        public static Property LoadXml(XmlNode node)
         {
-
+            Property prop = null;
+            if(node.Name == "Property")
+            {
+                prop = new Property();
+                foreach(XmlNode cNode in node.ChildNodes)
+                {
+                    switch(cNode.Name)
+                    {
+                        case "Description":
+                            prop.Description = cNode.InnerText;
+                            break;
+                        case "Direction":
+                            prop.Direction = cNode.InnerText;
+                            break;
+                        case "Type":
+                            prop.Type = cNode.InnerText;
+                            break;
+                        case "Name":
+                            prop.Name = cNode.InnerText;
+                            break;
+                    }
+                }
+            }
+            return prop;
         }
+
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {

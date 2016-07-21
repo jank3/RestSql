@@ -25,9 +25,12 @@ namespace RestSql.Data
             return xml.ToString();
         }
 
-        public virtual void LoadXml()
+        public virtual void LoadXml(XmlNode node)
         {
+            if(node.Name == "ConnectionSettings")
+            {
 
+            }
         }
     }
 }

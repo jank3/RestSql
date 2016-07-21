@@ -268,7 +268,7 @@ namespace RestSql.Dialogs
             sp.Children.Add(txb);
             dlg.Title = title;
             dlg.addContent(sp);
-            dlg.setSize(210, 140);
+            //dlg.setSize(210, 140);
             if (dlg.ShowDialog().Value == true)
             {
                 input = txb.Text;
