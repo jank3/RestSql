@@ -11,3 +11,6 @@ way to automate it.  Isolating the development work to
 the database and the website UI.  While still allowing
 services to directly connect to the database or constraining
 services to connect through the API.
+
+#Funding
+* If you would like to fund this effort: http://gofundme.com/2ga94ma5
