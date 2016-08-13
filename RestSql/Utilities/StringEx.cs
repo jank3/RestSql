@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RestSql.Utilities
 {
-    public class String
+    public class StringEx
     {
         public static void setSecureString(SecureString lhs, System.String rhs)
         {

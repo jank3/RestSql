@@ -57,7 +57,7 @@ namespace RestSql.Tabs
             if (index > -1 && index < Settings.Instance.Users.Count)
             {
                 DataContext = Settings.Instance.Users[index];
-                txb_Password.Password = Utilities.String.ConvertToUnsecureString(
+                txb_Password.Password = Utilities.StringEx.ConvertToUnsecureString(
                     Settings.Instance.Users[index].Password);
             }
         }
@@ -79,7 +79,7 @@ namespace RestSql.Tabs
             if(DataContext is Data.User)
             {
                 Data.User user = DataContext as Data.User;
-                Utilities.String.setSecureString(user.Password, txb_Password.Password);
+                Utilities.StringEx.setSecureString(user.Password, txb_Password.Password);
             }
         }
     }

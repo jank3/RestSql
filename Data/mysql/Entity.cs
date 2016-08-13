@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RestSql.Data.mysql
+namespace Data.mysql
 {
     public class Entity : Data.Entity
     {

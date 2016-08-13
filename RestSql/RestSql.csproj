@@ -59,17 +59,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Data\ConnectionSettings.cs" />
-    <Compile Include="Data\Database.cs" />
-    <Compile Include="Data\DatabaseTypes.cs" />
-    <Compile Include="Data\Entity.cs" />
-    <Compile Include="Data\mysql\ConnectionSettings.cs" />
-    <Compile Include="Data\mysql\Database.cs" />
-    <Compile Include="Data\mysql\Entity.cs" />
-    <Compile Include="Data\mysql\Query.cs" />
-    <Compile Include="Data\Property.cs" />
-    <Compile Include="Data\Query.cs" />
-    <Compile Include="Data\User.cs" />
     <Compile Include="Dialogs\DatabaseConfigDlg.xaml.cs">
       <DependentUpon>DatabaseConfigDlg.xaml</DependentUpon>
     </Compile>
@@ -95,7 +84,7 @@
     </Compile>
     <Compile Include="Utilities\Controls.cs" />
     <Compile Include="Utilities\Reflection.cs" />
-    <Compile Include="Utilities\String.cs" />
+    <Compile Include="Utilities\StringEx.cs" />
     <Page Include="Dialogs\DatabaseConfigDlg.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -163,6 +152,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Data\Data.csproj">
+      <Project>{a885ae82-e1c8-4c9c-ac26-7354178df431}</Project>
+      <Name>Data</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

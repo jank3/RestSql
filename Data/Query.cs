@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace RestSql.Data
+namespace Data
 {
     [Serializable]
     public class Query : INotifyPropertyChanged
@@ -113,7 +113,7 @@ namespace RestSql.Data
 
         private void AuthGroups_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            RestSql.Settings.Instance.Dirty = true;
+            NotifyPropertyChanged("AuthGroups");
         }
 
         public virtual void Load(System.Data.Common.DbConnection dbConn)
@@ -234,7 +234,6 @@ namespace RestSql.Data
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
-            RestSql.Settings.Instance.Dirty = true;
             if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));

@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace RestSql.Data
+namespace Data
 {
     [Serializable]
     public class User : INotifyPropertyChanged
@@ -97,7 +97,7 @@ namespace RestSql.Data
 
         private void Groups_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            RestSql.Settings.Instance.Dirty = true;
+            NotifyPropertyChanged("Groups");
         }
 
         public override string ToString()
@@ -127,7 +127,7 @@ namespace RestSql.Data
             writer.WriteEndElement();
             writer.WriteStartElement("Password");
             if(Password != null)
-                writer.WriteString(Utilities.String.ConvertToUnsecureString(Password));
+                writer.WriteString(Utilities.StringEx.ConvertToUnsecureString(Password));
             writer.WriteEndElement();
             writer.WriteStartElement("UserName");
             writer.WriteString(UserName);
@@ -178,7 +178,7 @@ namespace RestSql.Data
                             }
                             break;
                         case "Password":
-                            Utilities.String.setSecureString(user.Password, cNode.InnerText);
+                            Utilities.StringEx.setSecureString(user.Password, cNode.InnerText);
                             break;
                         case "UserName":
                             user.UserName = cNode.InnerText;
@@ -192,7 +192,6 @@ namespace RestSql.Data
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
-            RestSql.Settings.Instance.Dirty = true;
             if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));

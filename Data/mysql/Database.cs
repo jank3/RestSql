@@ -2,20 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace RestSql.Data.mysql
+namespace Data.mysql
 {
     public class Database : Data.Database
     {
         public Database():base()
         {
-
+            this.DatabaseType = DatabaseTypes.DB_TYPES.MySQL;
         }
 
         public Database(Data.Database db):base(db)
         {
-
+            this.DatabaseType = DatabaseTypes.DB_TYPES.MySQL;
         }
 
         public override void Connect()
@@ -32,7 +33,7 @@ namespace RestSql.Data.mysql
                 ServerAddress,
                 Name,
                 UserName,
-                Utilities.String.ConvertToUnsecureString(Password));
+                Utilities.StringEx.ConvertToUnsecureString(Password));
             // TODO : Add ConnectionSettings
 
             return connStr;
@@ -86,6 +87,40 @@ namespace RestSql.Data.mysql
                     q.Load(dbConn);
                 }
             }
+        }
+
+        public override List<object> CallQuery(String name, List<object> parms)
+        {
+            List<object> results = new List<object>();
+
+            MySql.Data.MySqlClient.MySqlConnection dbConn = this.ConnectAsync() as MySql.Data.MySqlClient.MySqlConnection;
+            if (dbConn != null && dbConn.State == System.Data.ConnectionState.Open)
+            {
+                String sql = "call " + name + "(";
+                for(int i = 0; i < parms.Count; i++)
+                {
+                    if (Utilities.Util.isNumber(parms[i]))
+                        sql += parms[i] + ",";
+                    else if (parms[i] is String) // should be the last type
+                        sql += "\'" + Regex.Replace((String)parms[i], "\'", "\'\'") + "\'" + ",";
+                }
+                if(sql.EndsWith(","))
+                    sql = sql.Substring(0, sql.Length - 1);
+                sql += ");";
+                var cmd = dbConn.CreateCommand();
+                cmd.CommandText = sql;
+                var reader = cmd.ExecuteReader();
+                while (reader.HasRows && reader.Read())
+                {
+                    List<object> row = new List<object>();
+                    for(int i = 0; i < reader.FieldCount; i++)
+                        row.Add(reader[i]);
+                    results.Add(row);
+                }
+                reader.Close();
+                dbConn.CloseAsync();
+            }
+            return results;
         }
     }
 }

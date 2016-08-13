@@ -1,13 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data.Common;
 using System.Runtime.CompilerServices;
 using System.Security;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 
-namespace RestSql.Data
+namespace Data
 {
     [Serializable]
     public class Database : INotifyPropertyChanged
@@ -38,6 +40,7 @@ namespace RestSql.Data
                 NotifyPropertyChanged();
             }
         }
+
         protected String m_UserName;
         public String UserName
         {
@@ -160,6 +163,24 @@ namespace RestSql.Data
             ActiveConnection.Open();
         }
 
+        public virtual DbConnection ConnectAsync()
+        {
+            DbConnection dbConn = (DbConnection)Activator.CreateInstance(this.getDatabaseType());
+            dbConn.ConnectionString = this.getConnectionString();
+            do
+            {
+                try
+                {
+                    dbConn.Open();
+                }
+                catch (Exception ex)
+                {
+                    Task.Delay(12000);
+                }
+            } while (dbConn.State != System.Data.ConnectionState.Open);
+            return dbConn;
+        }
+
         public virtual void Close()
         {
             if(ActiveConnection != null &&
@@ -182,6 +203,11 @@ namespace RestSql.Data
         public virtual void LoadQueries()
         {
             throw new NotImplementedException("Must override the LoadQueries function");
+        }
+
+        public virtual List<object> CallQuery(string name, List<object> parms)
+        {
+            throw new NotImplementedException("Must override the CallQuery function");
         }
 
         public Type getDatabaseType()
@@ -237,7 +263,7 @@ namespace RestSql.Data
                 Settings.ToXml(writer);
             writer.WriteStartElement("Password");
             if(Password != null)
-                writer.WriteString(Utilities.String.ConvertToUnsecureString(Password));
+                writer.WriteString(Utilities.StringEx.ConvertToUnsecureString(Password));
             writer.WriteEndElement();
             writer.WriteStartElement("UserName");
             writer.WriteString(UserName);
@@ -295,7 +321,7 @@ namespace RestSql.Data
                             }
                             break;
                         case "Password":
-                            Utilities.String.setSecureString(db.Password, cNode.InnerText);
+                            Utilities.StringEx.setSecureString(db.Password, cNode.InnerText);
                             break;
                         case "UserName":
                             db.UserName = cNode.InnerText;
@@ -332,7 +358,6 @@ namespace RestSql.Data
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
-            RestSql.Settings.Instance.Dirty = true;
             if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
