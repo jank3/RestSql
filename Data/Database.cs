@@ -175,7 +175,7 @@ namespace Data
                 }
                 catch (Exception ex)
                 {
-                    Task.Delay(12000);
+                    Task.Delay(120);
                 }
             } while (dbConn.State != System.Data.ConnectionState.Open);
             return dbConn;
@@ -205,7 +205,13 @@ namespace Data
             throw new NotImplementedException("Must override the LoadQueries function");
         }
 
-        public virtual List<object> CallQuery(string name, List<object> parms)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="parms"></param>
+        /// <returns>rows[colum_values]</returns>
+        public virtual List<List<object>> CallQuery(string name, List<object> parms)
         {
             throw new NotImplementedException("Must override the CallQuery function");
         }

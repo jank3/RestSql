@@ -89,9 +89,9 @@ namespace Data.mysql
             }
         }
 
-        public override List<object> CallQuery(String name, List<object> parms)
+        public override List<List<object>> CallQuery(String name, List<object> parms)
         {
-            List<object> results = new List<object>();
+            List<List<object>> results = new List<List<object>>();
 
             MySql.Data.MySqlClient.MySqlConnection dbConn = this.ConnectAsync() as MySql.Data.MySqlClient.MySqlConnection;
             if (dbConn != null && dbConn.State == System.Data.ConnectionState.Open)
@@ -102,7 +102,7 @@ namespace Data.mysql
                     if (Utilities.Util.isNumber(parms[i]))
                         sql += parms[i] + ",";
                     else if (parms[i] is String) // should be the last type
-                        sql += "\'" + Regex.Replace((String)parms[i], "\'", "\'\'") + "\'" + ",";
+                        sql += "\'" + MySql.Data.MySqlClient.MySqlHelper.EscapeString((String)parms[i]) + "\'" + ",";
                 }
                 if(sql.EndsWith(","))
                     sql = sql.Substring(0, sql.Length - 1);
@@ -117,7 +117,14 @@ namespace Data.mysql
                         row.Add(reader[i]);
                     results.Add(row);
                 }
-                reader.Close();
+                try
+                {
+                    reader.Close();
+                }
+                catch(Exception ex)
+                {
+                    // the db can close it.
+                }
                 dbConn.CloseAsync();
             }
             return results;
