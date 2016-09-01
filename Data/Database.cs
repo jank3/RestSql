@@ -14,7 +14,26 @@ namespace Data
     [Serializable]
     public class Database : INotifyPropertyChanged
     {
+        protected bool m_DebugInfo = false;
         protected String m_ServerAddress;
+        public long m_MaxConnections = long.MaxValue;
+        private Object m_OpenConnectionsLock = new object();
+        private long m_OpenConnections = 0;
+        public long OpenConnections { get { return m_OpenConnections; } }
+        protected void incrementOpenConnections()
+        {
+            lock (m_OpenConnectionsLock)
+                m_OpenConnections++;
+        }
+        protected void decrementOpenConnections()
+        {
+            lock (m_OpenConnectionsLock)
+            {
+                m_OpenConnections--;
+                if (m_OpenConnections < 0)
+                    m_OpenConnections = 0;
+            }
+        }
         public String ServerAddress
         {
             get
@@ -165,19 +184,38 @@ namespace Data
 
         public virtual DbConnection ConnectAsync()
         {
-            DbConnection dbConn = (DbConnection)Activator.CreateInstance(this.getDatabaseType());
-            dbConn.ConnectionString = this.getConnectionString();
+            DbConnection dbConn = null; 
             do
             {
                 try
                 {
-                    dbConn.Open();
+                    dbConn = (DbConnection)Activator.CreateInstance(this.getDatabaseType());
+                    dbConn.ConnectionString = this.getConnectionString();
+                    if (OpenConnections < m_MaxConnections)
+                    {
+                        dbConn.Open();
+                        incrementOpenConnections();
+                    }
+                    else
+                    {
+                        throw new Exception("Too many connections.");
+                    }
                 }
                 catch (Exception ex)
                 {
-                    Task.Delay(120);
+                    if(m_DebugInfo)
+                        Console.WriteLine("Failed to connect.  " + ex.Message);
+                    Task.Delay(200).Wait();
+                    try
+                    {
+                        dbConn.Close();
+                    }
+                    finally
+                    {
+                        dbConn.Dispose();
+                    }
                 }
-            } while (dbConn.State != System.Data.ConnectionState.Open);
+            } while (dbConn == null || dbConn.State != System.Data.ConnectionState.Open);
             return dbConn;
         }
 
