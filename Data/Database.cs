@@ -14,10 +14,14 @@ namespace Data
     [Serializable]
     public class Database : INotifyPropertyChanged
     {
+#if DEBUG
+        protected bool m_DebugInfo = true;
+#else
         protected bool m_DebugInfo = false;
+#endif
         protected String m_ServerAddress;
         public long m_MaxConnections = long.MaxValue;
-        private Object m_OpenConnectionsLock = new object();
+        private System.Object m_OpenConnectionsLock = new System.Object();
         private long m_OpenConnections = 0;
         public long OpenConnections { get { return m_OpenConnections; } }
         protected void incrementOpenConnections()
@@ -243,15 +247,28 @@ namespace Data
             throw new NotImplementedException("Must override the LoadQueries function");
         }
 
+        public virtual int save(String tableName, Data.Object row)
+        {
+            throw new NotImplementedException("Must override the save function");
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="name"></param>
         /// <param name="parms"></param>
         /// <returns>rows[colum_values]</returns>
-        public virtual List<List<object>> CallQuery(string name, List<object> parms)
+        public virtual System.Data.DataTable CallQuery(string name, List<object> parms)
         {
             throw new NotImplementedException("Must override the CallQuery function");
+        }
+
+        public virtual System.Data.DataTable getFiltered(String tableName,
+                filtering.BaseFilter filter = null,
+                filtering.Sort sort = null,
+                filtering.Paging page = null)
+        {
+            throw new NotImplementedException("Must override the getFiltered function");
         }
 
         public Type getDatabaseType()
